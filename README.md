@@ -14,11 +14,8 @@ Ensure the following Python libraries are installed:
 - `matplotlib`
 - `pandas`
 
-Install them using pip:
-bash
-```
-pip install opencv-python numpy mediapipe matplotlib pandas
-```
+They should be installed by default in google collab except for `mediapipe`, run the `!pip install` command to download the latest version.
+
 Steps to Use
 
 1. Prepare the Input Image
