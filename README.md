@@ -1,6 +1,6 @@
 # vThree_Sizes Character Measurement Calculation
 Calculator for vtubers to determine their 3 sizes accurately.
-This notebook processes an anime character image to extract height, bust, waist, underbust, and hip measurements using Mediapipe Pose.
+This notebook `Vtuber_3_Sizes_Estimator.ipynb` processes an anime character image to extract height, bust, waist, underbust, and hip measurements using Mediapipe Pose.
 
 # How to Use the Notebook
 
@@ -22,7 +22,7 @@ pip install opencv-python numpy mediapipe matplotlib pandas
 Steps to Use
 
 1. Prepare the Input Image
-- Save the character image in the specified path in the code (default: "/mnt/data/Corrupted_fullbody.png").
+- Save the character image in the specified path in the code (default: "/content/marie_dress.png").
 
 2. Run the Notebook
 - Open the notebook in Jupyter, VSCode, or any Python notebook environment.
