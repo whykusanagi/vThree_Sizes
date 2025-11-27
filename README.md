@@ -38,12 +38,12 @@ A Jupyter notebook that processes anime character images to extract accurate bod
 #### Local Setup
 
 ```bash
-# Install dependencies
-pip install opencv-python numpy mediapipe matplotlib pandas
+# Optional: create isolated environment
+python3 -m venv .venv
+source .venv/bin/activate
 
-# Or using conda
-conda install opencv numpy matplotlib pandas
-pip install mediapipe
+# Install pinned dependencies
+pip install -r requirements.txt
 ```
 
 ### Usage
@@ -95,17 +95,16 @@ Cup size is determined by the difference between bust and underbust measurements
 
 ### Reference Height
 
-The default reference height is **175 cm** (based on a tall character model). You can adjust this in the code:
+The default reference height is **175 cm** (based on a tall character model). You can adjust this via the helper module:
 
 ```python
-# Change reference height (in cm)
-reference_height = 162.5  # Average American woman height
+from measurements import MeasurementConfig, centimeters_per_pixel
+
+config = MeasurementConfig(reference_height_cm=162.5)  # e.g., average 5'4"
+cm_per_pixel = centimeters_per_pixel(raw_height_px, config.reference_height_cm)
 ```
 
-The cm/pixel ratio is calculated as:
-```
-cm_per_pixel = reference_height / nude_height_pixels
-```
+> **Note:** Earlier versions hard-coded `175 / 1410` regardless of the image. The new helper computes the ratio per render so scaled or cropped art still produces accurate conversions.
 
 ## Architecture & Data Flow
 
@@ -127,14 +126,7 @@ flowchart TD
 
 ### Adjusting Reference Height
 
-Modify the reference height in the conversion calculation:
-
-```python
-converted_measurements = {
-    key: round(value * (175 / 1410), 1)  # Change 175 to your character's height
-    for key, value in measurements.items()
-}
-```
+Update `MeasurementConfig.reference_height_cm` or expose it as a notebook parameter. The helper automatically recalculates the cm-per-pixel ratio per render.
 
 ### Changing Image Folder
 
@@ -155,6 +147,26 @@ refined_cup_sizes = {
     # ... add or modify ranges
 }
 ```
+
+## Programmatic Usage
+
+For automated pipelines, import the helper module instead of copying notebook cells:
+
+```python
+from measurements import (
+    MeasurementConfig,
+    centimeters_per_pixel,
+    estimate_body_circumferences,
+    estimate_cup_size,
+)
+
+config = MeasurementConfig(reference_height_cm=170)
+cm_per_pixel = centimeters_per_pixel(height_px, config.reference_height_cm)
+circs = estimate_body_circumferences(keypoints, cm_per_pixel, config)
+cup = estimate_cup_size(circs["Bust Circumference"], circs["Underbust Circumference"])
+```
+
+See `tests/test_measurements.py` for worked examples.
 
 ## Docker & Execution Model
 
@@ -207,6 +219,12 @@ Smoke test results:
 ```
 
 This confirms the notebook’s required libraries load successfully in a clean environment. If protobuf conflicts arise, pin protobuf ≥5.26.1 or run inside Colab where the stack is pre-synchronized.
+
+Unit tests for the math helpers live in `tests/test_measurements.py`:
+
+```bash
+PYTHONPATH=. pytest
+```
 
 ## Contributing
 
