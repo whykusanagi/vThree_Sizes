@@ -6,6 +6,8 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/whykusanagi/vThree_Sizes/blob/main/Vtuber_3_Sizes_Estimator.ipynb)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
+![vThree_Sizes Header](https://s3.whykusanagi.xyz/images/vthree-sizes/header-image.png)
+
 ## Overview
 
 A Jupyter notebook that processes anime character images to extract accurate body measurements (height, bust, waist, underbust, hip) and estimate cup size using MediaPipe Pose detection. Designed for VTuber creators who need precise measurements for character design, costume creation, or 3D modeling.
@@ -110,11 +112,11 @@ cm_per_pixel = centimeters_per_pixel(raw_height_px, config.reference_height_cm)
 
 ```mermaid
 flowchart TD
-  A[Input Images<br/>(PNG/JPG)] --> B[MediaPipe Pose]
+  A["Input Images (PNG/JPG)"] --> B[MediaPipe Pose]
   B --> C[Keypoint Extraction]
   C --> D[Measurement Engine]
   D --> E[Reference Height Converter]
-  E --> F[Results Table + Annotations]
+  E --> F["Results Table + Annotations"]
 ```
 
 - **Input layer:** Outfit renders or promotional art dropped into `/content/`.
