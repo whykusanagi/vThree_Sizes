@@ -37,3 +37,10 @@ def test_estimate_cup_size():
     assert estimate_cup_size(90, 82) == "D"
     assert estimate_cup_size(82, 82) == "Unknown"
 
+
+
+def test_default_landmarks_need_no_mediapipe():
+    # BlazePose indices: shoulders 11/12, hips 23/24. No mediapipe import on this path.
+    keypoints = {11: (100, 10), 12: (200, 10), 23: (110, 50), 24: (190, 50)}
+    res = estimate_body_circumferences(keypoints, centimeters_per_pixel(1000, 175), MeasurementConfig())
+    assert res["Bust Circumference"] > res["Hip Circumference"] > 0
