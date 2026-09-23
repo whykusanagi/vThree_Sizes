@@ -6,9 +6,25 @@ Colab and avoid duplicating logic.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import Dict, Tuple
 
 import numpy as np
+
+
+class PoseLandmark(IntEnum):
+    """The 33-point BlazePose skeleton indices MediaPipe returns, for the points we use.
+
+    Kept here instead of importing mediapipe's enum: it moved when mediapipe 0.10.30 dropped
+    the legacy `mediapipe.solutions` API, and this module is pure math that should import
+    without mediapipe installed at all.
+    """
+    NOSE = 0
+    LEFT_SHOULDER = 11
+    RIGHT_SHOULDER = 12
+    LEFT_HIP = 23
+    RIGHT_HIP = 24
+    LEFT_ANKLE = 27
 
 
 # Default ratio between bust and underbust circumferences.
@@ -45,7 +61,7 @@ def estimate_body_circumferences(
         return abs(keypoints[a][0] - keypoints[b][0])
 
     if landmark_enum is None:
-        from mediapipe.python.solutions.pose import PoseLandmark as landmark_enum
+        landmark_enum = PoseLandmark
 
     bust = width(landmark_enum.LEFT_SHOULDER.value, landmark_enum.RIGHT_SHOULDER.value)
     waist = width(landmark_enum.LEFT_HIP.value, landmark_enum.RIGHT_HIP.value)
